@@ -1,0 +1,65 @@
+<html>
+<head>
+
+</head>
+<body>
+<div>
+	<form>
+			First name: <input type="text" name="FirstName" value="Mickey"><br>
+            Last name: <input type="text" name="LastName" value="Mouse"><br>
+            <input type="submit" value="Submit">
+    </form>
+</div>
+<script>
+(function () {
+   var makeTextFile = function (text) {
+        var data = new Blob([text], {type: 'text/plain'});
+        return window.URL.createObjectURL(data);
+      },
+      serializeForm = function(form, evt){
+        var evt    = evt || window.event;
+        //evt.target = evt.target || evt.srcElement;
+        var field, query='';
+        if(typeof form == 'object' && form.nodeName == "FORM"){
+            for(i=form.elements.length-1; i>=0; i--){
+                field = form.elements[i];
+                if(field.name && field.type != 'file' && field.type != 'reset'){
+                    if(field.type == 'select-multiple'){
+                        for(j=form.elements[i].options.length-1; j>=0; j--){
+                            if(field.options[j].selected){
+                                query += '&' + field.name + "=" + encodeURIComponent(field.options[j].value).replace(/%20/g,'+');
+                            }
+                        }
+                    }
+                    else{
+                        if((field.type != 'submit' && field.type != 'button') || evt.target == field){
+                            if((field.type != 'checkbox' && field.type != 'radio') || field.checked){
+                                query += '&' + field.name + "=" + encodeURIComponent(field.value).replace(/%20/g,'+');
+                            }   
+                        }
+                    }
+                }
+            }
+        }
+        return query.substr(1);
+    }
+   , _onsubmit = function() {
+        var _href = makeTextFile(serializeForm(this));
+        var _a = document.createElement("A");
+        _a.setAttribute('download', 'export.txt');
+        _a.setAttribute('target', '_blank');
+        _a.href = _href;
+        _a.click();
+		console.log("testing")
+        window.URL.revokeObjectURL(_href);
+        //return false;
+    };
+
+    [].forEach.call(
+        document.querySelectorAll('form'),
+        function(f) { f.onsubmit = _onsubmit; }
+        );
+})();
+</script>
+</body>
+</html>

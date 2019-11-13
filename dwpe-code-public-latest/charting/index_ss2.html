@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>Charting Testing</title>
+	<link href="css/basic.css" type="text/css" rel="stylesheet" />
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+   
+	<script type="text/javascript">	
+	var logger ; //= document.getElementById('log');
+
+	function Create2DArray(rows) {
+		var arr = [];
+		for (var i=0;i<rows;i++) {
+			 arr[i] ={};
+		}
+		return arr;
+	}
+	function count()
+	{
+		//var map = {};
+		var arrMap = Create2DArray(100);
+		logger.innerHTML += "<br>Got array (2)"
+		var dataArray = [];
+		var table = $("#tableChart") ; //table tbody"; //;
+		var data = table.find('tbody td'); //Get All HTML td elements
+		var cols = table.find('thead th');
+		logger.innerHTML += "<br>dsize " +data.size();
+		logger.innerHTML += "<br>cols " +cols.size();
+		var val;
+		//$('#log').text("data size=" + data.size());
+		logger.innerHTML += "<br> data size=" + data.size();
+		logger.innerHTML += "<br> col size=" + cols.size();
+		// Save important data into new Array
+		/****
+		for (var i = 0; i <= data.size() - 1; i = i + cols.size()) // + 1 to skip 
+		{
+		  //dataArray.push(data[i].textContent, data[i + 1].textContent, data[i + 2].textContent);
+			
+			val=data[i].textContent;
+			var key = $(val).text();
+			var colNum = count % cols ;
+			if( colNum == 0 ) colNum = cols;
+			
+			var cMap = arrMap[colNum]
+			if (key in cMap) cMap[key] = cMap[key] + 1;
+			else cMap[key] = 1;
+			//alert(map[key] + "  " + key);
+			logger.innerHTML += "<br>" + cMap[key] + " Key= " + key;
+		};
+		****/
+		//for (var i = 2; i <= cols.size() - 1; i=i+1) // + 1 to skip 
+		{
+			var count = 1;
+			$("#tableChart").children("tbody").children("tr").children("td:nth-child(n)").each(function (i, val) {
+				var colNum = count % cols.size() ;
+				if( colNum == 0 ) 
+					colNum = cols.size();
+				logger.innerHTML += "<br> colNum=" + colNum;
+				var cMap = arrMap[colNum]
+				var key = $(val).text();
+				if (key in cMap) cMap[key] = cMap[key] + 1;
+				else cMap[key] = 1;
+				logger.innerHTML += "<br>" + cMap[key] + " Key= " + key;
+				count++;
+			});
+			logger.innerHTML += "<br> done with inner loop";
+		}
+
+		// dump the col maps
+
+		for( var col=1; col <= cols.size(); col++){
+			var cMap = arrMap[col];
+			var result = '';
+
+			for (var key in cMap) {
+				result += key + ':' + cMap[key] + '\n';
+				logger.innerHTML += "<br>" + key + " V= " + cMap[key];
+			}
+			logger.innerHTML += "<br> done with col dump for " + col;
+		}
+	
+		
+		//alert(result);
+	}
+
+	$(document).ready(function() {
+		logger = document.getElementById('log');
+		//alert('in ready');
+		//$('#log').text("in ready");
+		logger.innerHTML = logger.innerHTML + "In Ready";
+		//$('#log').show();
+		count();
+	} );
+	
+	</script>
+</head>
+<body>
+<div id="log" > </div>
+<table id="tableChart" >
+	<caption>2050 Employee Sales by function</caption>
+	<thead>
+		<tr>
+			<th>food</th>
+			<th>auto</th>
+			<th>household</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>3</td>
+			<td>160</td>
+			<td>40</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>40</td>
+			<td>30</td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>180</td>
+			<td>10</td>
+		</tr>
+	</tbody>
+</table>	
+
+<table >
+	<caption>2022 Employee Sales by Department</caption>
+	<thead>
+		<tr>
+			<th>food</th>
+			<th>auto</th>
+			<th>household</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>190</td>
+			<td>160</td>
+			<td>40</td>
+		</tr>
+		<tr>
+			<td>300</td>
+			<td>40</td>
+			<td>30</td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>180</td>
+			<td>10</td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>
